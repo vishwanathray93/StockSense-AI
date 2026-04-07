@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Shop {
+  id             BigInt    @id @default(autoincrement())
+  shop_domain    String    @unique @db.VarChar(255)
+  access_token   String?
+  installed_at   DateTime? @default(now()) @db.Timestamp(6)
+  uninstalled_at DateTime? @db.Timestamp(6)
+  plan           String?   @db.VarChar(50)
+  timezone       String?   @db.VarChar(50)
+  created_at     DateTime? @default(now()) @db.Timestamp(6)
+
+  @@map("shops")
+}
+
+model Visitor {
+  id          String    @id @default(uuid()) @db.Uuid
+  shop_domain String?   @db.VarChar(255)
+  first_seen  DateTime? @default(now()) @db.Timestamp(6)
+  last_seen   DateTime? @db.Timestamp(6)
+  ip_address  String?   @db.VarChar(45)
+  user_agent  String?
+  country     String?   @db.VarChar(100)
+  city        String?   @db.VarChar(100)
+  device      String?   @db.VarChar(50)
+  browser     String?   @db.VarChar(50)
+
+  @@index([shop_domain], map: "idx_visitors_shop")
+  @@map("visitors")
+}
+
+model PageView {
+  id           BigInt    @id @default(autoincrement())
+  shop_domain  String?   @db.VarChar(255)
+  visitor_id   String?   @db.Uuid
+  session_id   String?   @db.Uuid
+  url          String?
+  path         String?
+  title        String?
+  referrer     String?
+  time_on_page Int?
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([shop_domain], map: "idx_pageviews_shop")
+  @@index([created_at], map: "idx_pageviews_time")
+  @@map("page_views")
+}
+
+model ClickEvent {
+  id            BigInt    @id @default(autoincrement())
+  shop_domain   String?   @db.VarChar(255)
+  visitor_id    String?   @db.Uuid
+  session_id    String?   @db.Uuid
+  page          String?
+  element_type  String?   @db.VarChar(50)
+  element_text  String?
+  element_id    String?   @db.VarChar(255)
+  element_class String?
+  x_position    Int?
+  y_position    Int?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([shop_domain], map: "idx_clicks_shop")
+  @@map("click_events")
+}
+
+model add_to_cart_events {
+  id          BigInt    @id @default(autoincrement())
+  shop_domain String?   @db.VarChar(255)
+  product_id  String?   @db.VarChar(255)
+  visitor_id  String?   @db.Uuid
+  session_id  String?   @db.Uuid
+  quantity    Int?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model daily_stats {
+  id              BigInt    @id @default(autoincrement())
+  shop_domain     String?   @db.VarChar(255)
+  date            DateTime? @db.Date
+  total_visitors  Int?
+  total_sessions  Int?
+  total_pageviews Int?
+  total_clicks    Int?
+  total_orders    Int?
+  revenue         Decimal?  @db.Decimal
+}
+
+model funnels {
+  id          BigInt    @id @default(autoincrement())
+  shop_domain String?   @db.VarChar(255)
+  name        String?   @db.VarChar(255)
+  steps       Json?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model orders {
+  id          BigInt    @id @default(autoincrement())
+  shop_domain String?   @db.VarChar(255)
+  order_id    String?   @db.VarChar(255)
+  total_price Decimal?  @db.Decimal
+  currency    String?   @db.VarChar(10)
+  visitor_id  String?   @db.Uuid
+  created_at  DateTime? @db.Timestamp(6)
+}
+
+model product_views {
+  id          BigInt    @id @default(autoincrement())
+  shop_domain String?   @db.VarChar(255)
+  product_id  String?   @db.VarChar(255)
+  visitor_id  String?   @db.Uuid
+  session_id  String?   @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model products {
+  id           BigInt    @id @default(autoincrement())
+  shop_domain  String?
+  product_id   String   @unique
+  title        String?
+  handle       String?
+  image        String?
+  collection   String?
+  created_at   DateTime? @default(now())
+}
+
+model Session {
+  id                   String   @id
+  shop                 String
+  state                String
+  isOnline             Boolean  @default(false)
+  scope                String?
+  expires              DateTime?
+  accessToken          String
+  userId               BigInt?
+  firstName            String?
+  lastName             String?
+  email                String?
+  accountOwner         Boolean?
+  locale               String?
+  collaborator         Boolean?
+  emailVerified        Boolean?
+
+  refreshToken         String?
+  refreshTokenExpires  DateTime?
+
+  @@map("Session")
+}
+
+model sessions {
+  id          String    @id @db.Uuid
+  visitor_id  String?   @db.Uuid
+  shop_domain String?   @db.VarChar(255)
+  started_at  DateTime? @default(now()) @db.Timestamp(6)
+  ended_at    DateTime? @db.Timestamp(6)
+  entry_page  String?
+  exit_page   String?
+  total_pages Int?      @default(0)
+  duration    Int?
+  referrer    String?
+
+  @@index([shop_domain], map: "idx_sessions_shop")
+}
