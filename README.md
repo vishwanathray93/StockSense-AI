@@ -123,12 +123,7 @@ You can deploy this Shopify app using:
 
 ## 📸 Screenshots
 
-Add your dashboard screenshots here.
-
-Example:
-
-```md
-![Dashboard](./screenshots/dashboard.png)
+![Analytics](https://raw.githubusercontent.com/vishwanathray93/StockSense-AI/main/Analytics-%C2%B7-StockSense-AI-home.png)
 ```
 
 ---
