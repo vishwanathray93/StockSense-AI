@@ -56,7 +56,7 @@ stocksense/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/vishwanathray93/stocksense.git
+git clone https://github.com/vishwanathray93/stocksense-ai.git
 ```
 
 ### 2. Navigate to Project
