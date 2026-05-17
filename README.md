@@ -125,6 +125,7 @@ You can deploy this Shopify app using:
 
 ![Analytics](https://raw.githubusercontent.com/vishwanathray93/StockSense-AI/main/Analytics-%C2%B7-StockSense-AI-home.png)
 ![Dashboard](https://github.com/vishwanathray93/StockSense-AI/blob/main/StockSense-AI-%C2%B7-Shopify.png)
+![AI Agent](https://github.com/vishwanathray93/StockSense-AI/blob/main/Analytics-%C2%B7-StockSense-AI-agent.png)
 ```
 
 ---
